@@ -60,11 +60,10 @@ async def updateCurrentSong():
         for _ in range(5):
             try:
                 data = await getCurrentSong()
+                break
             except:
                 data = None 
         
-        if not data:
-            continue
 
         if not data:
             text = os.getenv('AFK_Text')
@@ -98,10 +97,10 @@ async def updateCurrentSong():
             except Exception as e:
                 pass
 
-@bot.on_message(filters.command('start'))
-async def start(client:Client,msg:Message):
-    startText = os.getenv('Start_Text')
-    await msg.reply_text(startText)
-    await msg.reply_sticker('CAACAgQAAxkBAAKtfmBYwwNSejLyJwSuHAmVZclNq5vXAALCCAACMC2BUSZejXISPFloHgQ')
+# @bot.on_message(filters.command('start'))
+# async def start(client:Client,msg:Message):
+#     startText = os.getenv('Start_Text')
+#     await msg.reply_text(startText)
+#     await msg.reply_sticker('CAACAgQAAxkBAAKtfmBYwwNSejLyJwSuHAmVZclNq5vXAALCCAACMC2BUSZejXISPFloHgQ')
 
 bot.run(updateCurrentSong())

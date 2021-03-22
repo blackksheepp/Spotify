@@ -45,7 +45,7 @@ async def updateCurrentSong():
     chatId = -1001298132275
 
     while True:
-        await asyncio.sleep(5)
+        await asyncio.sleep(1)
 
         data = await getCurrentSong()
 

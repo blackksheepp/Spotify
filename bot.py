@@ -6,10 +6,20 @@ import spotipy.util as ut
 from pyrogram import Client, filters
 from pyrogram.types import *
 
-bot = Client('stopify',api_id=2810072,api_hash='2b1873a1e07e6c6c26319b6963d9aa4c',bot_token='1431085343:AAEy-AWMGiCvNUbC5K7mWvqgXjJaL9O8Y0Q')
+import os
+
+apiId = int(os.getenv('Api_Id'))
+apiHash = os.getenv('Api_Hash')
+botToken = os.getenv('Bot_Token')
+
+spotifyClientId = os.getenv('Spotify_Client_Id')
+spotifyClientSecret = os.getenv('Spotify_Client_Secret')
+spotifyUsername = os.getenv('Spotify_Username')
+
+bot = Client('stopify',api_id=apiId,api_hash=apiHash,bot_token=botToken)
 
 async def getCurrentSong():
-    token = spotipy.util.prompt_for_user_token(client_id='3334ecb597d0468b9d69fb6d09993a12',client_secret='6418baa27d734c3fb6695bbadf53bef2',username='Maybe Alive',scope='user-read-currently-playing',redirect_uri='http://localhost:8080/callback')
+    token = spotipy.util.prompt_for_user_token(client_id=spotifyClientId,client_secret=spotifyClientSecret,username=spotifyUsername,scope='user-read-currently-playing',redirect_uri='http://localhost:8080/callback')
 
     if token:
         sp = spotipy.Spotify(auth=token)
@@ -41,16 +51,23 @@ async def getCurrentSong():
         
 
 async def updateCurrentSong():
-    messageId = 11
-    chatId = -1001298132275
+    messageId = int(os.getenv('Message_Id'))
+    chatId = int(os.getenv('Chat_Id'))
 
     while True:
         await asyncio.sleep(1)
 
-        data = await getCurrentSong()
+        for _ in range(5):
+            try:
+                data = await getCurrentSong()
+            except:
+                data = None 
+        
+        if not data:
+            continue
 
         if not data:
-            text = 'ɴᴏᴛ ʟɪꜱᴛᴇɴɪɴɢ ᴀɴʏᴛʜɪɴɢ...ᴘʀᴏʙᴀʙʟʏ ꜱʟᴇᴇᴘɪɴɢ...'
+            text = os.getenv('AFK_Text')
             link = 'https://open.spotify.com/user/31kjpvfkckxjyoxst3l25ok7jf4y'
             button = InlineKeyboardMarkup([[
             InlineKeyboardButton('Profile 🤍',url=link)
@@ -80,5 +97,11 @@ async def updateCurrentSong():
                     await bot.edit_message_media(chat_id=chatId,message_id=messageId,media=InputMediaPhoto(media=pic,caption=text,parse_mode='html'),reply_markup=button)
             except Exception as e:
                 pass
+
+@bot.on_message(filters.command('start'))
+async def start(client:Client,msg:Message):
+    startText = os.getenv('Start_Text')
+    await msg.reply_text(startText)
+    await msg.reply_sticker('CAACAgQAAxkBAAKtfmBYwwNSejLyJwSuHAmVZclNq5vXAALCCAACMC2BUSZejXISPFloHgQ')
 
 bot.run(updateCurrentSong())

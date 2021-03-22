@@ -6,7 +6,7 @@ import spotipy.util as ut
 from pyrogram import Client, filters
 from pyrogram.types import *
 
-bot = Client('spotify',api_id=2810072,api_hash='2b1873a1e07e6c6c26319b6963d9aa4c',bot_token='1431085343:AAEy-AWMGiCvNUbC5K7mWvqgXjJaL9O8Y0Q')
+bot = Client('stopify',api_id=2810072,api_hash='2b1873a1e07e6c6c26319b6963d9aa4c',bot_token='1431085343:AAEy-AWMGiCvNUbC5K7mWvqgXjJaL9O8Y0Q')
 
 async def getCurrentSong():
     token = spotipy.util.prompt_for_user_token(client_id='3334ecb597d0468b9d69fb6d09993a12',client_secret='6418baa27d734c3fb6695bbadf53bef2',username='Maybe Alive',scope='user-read-currently-playing',redirect_uri='http://localhost:8080/callback')
